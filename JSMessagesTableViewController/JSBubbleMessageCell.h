@@ -39,7 +39,7 @@
 #define DATE_LABEL_HEIGHT 12.0f
 
 @interface JSBubbleMessageCell : UITableViewCell
-@property (strong, nonatomic) UILabel *username;
+@property (strong, nonatomic) NSString *username;
 @property (strong, nonatomic) UIImageView *avatar;
 @property (strong, nonatomic) NSURL *avatar_url;
 @property (assign, nonatomic) BOOL show_avatars;

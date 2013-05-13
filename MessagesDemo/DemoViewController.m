@@ -115,7 +115,10 @@
     return [self.timestamps objectAtIndex:indexPath.row];
 }
 -(NSURL *)avatarURLFor:(NSIndexPath *)path{
-    return [NSURL URLWithString:@"http://www.google.com/"];
+    return [NSURL URLWithString:@"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUhsTDjh1cwUC30l2_VnG5fZeNg8Q_9MVy2hIo6BxGQ0xGeoBZ"];
+}
+-(NSString *)usernameFor:(NSIndexPath *)path{
+    return @"Felipe Saint-Jean";
 }
 
 @end

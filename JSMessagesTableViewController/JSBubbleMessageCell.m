@@ -37,6 +37,7 @@
 #import "JSBubbleMessageCell.h"
 #import "UIColor+JSMessagesView.h"
 #import <QuartzCore/QuartzCore.h>
+#import <JGAFImageCache.h>
 @interface JSBubbleMessageCell()
 
 @property (strong, nonatomic) JSBubbleView *bubbleView;
@@ -97,6 +98,7 @@
     
     [self.contentView addSubview:self.bubbleView];
     [self.contentView sendSubviewToBack:self.bubbleView];
+    
 }
 
 
@@ -155,22 +157,6 @@
 
     
 }
-- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
-             hasTimestamp:(BOOL)hasTimestamp
-                   avatar:(NSURL *)avatar_url
-                 username:(NSString *)username
-          reuseIdentifier:(NSString *)reuseIdentifier{
- 
-    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
-    if(self) {
-        self.show_avatars = YES;
-        [self setup];
-        [self configureWithStyle:style timestamp:hasTimestamp];
-    }
-    return self;
-
-}
-
 
 - (id)initWithBubbleStyle:(JSBubbleMessageStyle)style hasTimestamp:(BOOL)hasTimestamp reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -193,7 +179,9 @@
 #pragma mark - Message Cell
 - (void)setMessage:(NSString *)msg
 {
-    self.bubbleView.text = msg;
+    self.bubbleView.text =msg;
+    
+                           //setVersion:<#(NSInteger)#>] msg;
 }
 
 - (void)setTimestamp:(NSDate *)date
@@ -223,10 +211,23 @@
 
 -(void)setAvatar_url:(NSURL *)avatar_url{
     _avatar_url =  avatar_url;
-    if (self.avatar_url)
+    if (self.avatar_url){
         self.show_avatars = YES;
-    else{
+        [[JGAFImageCache sharedInstance] imageForURL:[avatar_url absoluteString] completion:^(UIImage *image) {
+            self.avatar.image = image;
+        }];
+
+    }else{
+        self.avatar.image = nil;
         self.show_avatars = NO;
     }
+    
+}
+-(void)setUsername:(NSString *)username{
+    _username = username;
+    if (self.bubbleView.style == JSBubbleMessageStyleIncomingDefault || self.bubbleView.style == JSBubbleMessageStyleIncomingSquare)
+        self.bubbleView.author = username;
+    else
+        self.bubbleView.author = nil;
 }
 @end

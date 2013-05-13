@@ -192,6 +192,9 @@
         NSURL *url = [self.dataSource avatarURLFor:indexPath];
         cell.avatar_url = url;
     }
+    if ([self.dataSource respondsToSelector:@selector(usernameFor:)]){
+        cell.username = [self.dataSource usernameFor:indexPath];
+    }
     
     return cell;
 }
@@ -201,7 +204,8 @@
 {
     CGFloat dateHeight = [self shouldHaveTimestampForRowAtIndexPath:indexPath] ? DATE_LABEL_HEIGHT : 0.0f;
     
-    return [JSBubbleView cellHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]] + dateHeight;
+    CGFloat userHeight = [JSBubbleView textSizeForAuthor:@"One Line"].height;
+    return [JSBubbleView cellHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]] + dateHeight +userHeight;
 }
 
 #pragma mark - Messages view controller

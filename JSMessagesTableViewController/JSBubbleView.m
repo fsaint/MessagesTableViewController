@@ -86,24 +86,49 @@
     [self setNeedsDisplay];
 }
 
+-(void)setAuthor:(NSString *)author{
+    _author = author;
+    [self setNeedsDisplay];
+}
+
 #pragma mark - Drawing
 - (void)drawRect:(CGRect)frame
 {
+    
+    NSString *author_text =[NSString stringWithFormat:@"%@ said:",self.author];
+    CGSize author_size = CGSizeZero;
+    if (self.author){
+        author_size = [JSBubbleView textSizeForAuthor:author_text];
+    }
+    
 	UIImage *image = [JSBubbleView bubbleImageForStyle:self.style];
     CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
 	CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
                                     kMarginTop,
                                     bubbleSize.width,
-                                    bubbleSize.height);
+                                    bubbleSize.height + author_size.height);
     
 	[image drawInRect:bubbleFrame];
 	
+    
+    CGFloat textX = (CGFloat)image.leftCapWidth - 3.0f + ([self styleIsOutgoing] ? bubbleFrame.origin.x : 0.0f);
+    if (self.author){
+        CGRect author_rect = CGRectMake(textX,
+                                        kPaddingTop + kMarginTop,
+                                        author_size.width,
+                                        author_size.height );
+        
+        [author_text drawInRect:author_rect withFont:[JSBubbleView authorFont] lineBreakMode:NSLineBreakByTruncatingMiddle alignment:NSTextAlignmentRight];
+    }
+    
 	CGSize textSize = [JSBubbleView textSizeForText:self.text];
-	CGFloat textX = (CGFloat)image.leftCapWidth - 3.0f + ([self styleIsOutgoing] ? bubbleFrame.origin.x : 0.0f);
+	
     CGRect textFrame = CGRectMake(textX,
-                                  kPaddingTop + kMarginTop,
+                                  kPaddingTop + kMarginTop + author_size.height,
                                   textSize.width,
-                                  textSize.height);
+                                  textSize.height + author_size.height);
+    
+    
     
 	[self.text drawInRect:textFrame
                  withFont:[JSBubbleView font]
@@ -142,20 +167,30 @@
     return nil;
 }
 
++(UIFont *)authorFont{
+    return [UIFont italicSystemFontOfSize:10.0];
+}
 + (UIFont *)font
 {
     return [UIFont systemFontOfSize:16.0f];
 }
 
-+ (CGSize)textSizeForText:(NSString *)txt
++ (CGSize)textSizeForText:(NSString *)txt font:(UIFont *)font
 {
     CGFloat width = [UIScreen mainScreen].applicationFrame.size.width * 0.65f;
     CGFloat height = MAX([JSBubbleView numberOfLinesForMessage:txt],
                          [txt numberOfLines]) * [JSMessageInputView textViewLineHeight];
     
-    return [txt sizeWithFont:[JSBubbleView font]
+    return [txt sizeWithFont:font
            constrainedToSize:CGSizeMake(width, height)
                lineBreakMode:NSLineBreakByWordWrapping];
+}
++ (CGSize)textSizeForText:(NSString *)txt{
+    return [JSBubbleView textSizeForText:txt font:[JSBubbleView font]];
+}
+
++ (CGSize)textSizeForAuthor:(NSString *)txt{
+    return [JSBubbleView textSizeForText:txt font:[JSBubbleView authorFont]];
 }
 
 + (CGSize)bubbleSizeForText:(NSString *)txt
