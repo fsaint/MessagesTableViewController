@@ -187,6 +187,12 @@
     [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
     [cell setBackgroundColor:tableView.backgroundColor];
     
+    
+    if ([self.dataSource respondsToSelector:@selector(avatarURLFor:)]){
+        NSURL *url = [self.dataSource avatarURLFor:indexPath];
+        cell.avatar_url = url;
+    }
+    
     return cell;
 }
 

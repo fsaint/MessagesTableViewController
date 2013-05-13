@@ -39,14 +39,26 @@
 #define DATE_LABEL_HEIGHT 12.0f
 
 @interface JSBubbleMessageCell : UITableViewCell
+@property (strong, nonatomic) UILabel *username;
+@property (strong, nonatomic) UIImageView *avatar;
+@property (strong, nonatomic) NSURL *avatar_url;
+@property (assign, nonatomic) BOOL show_avatars;
 
 #pragma mark - Initialization
 - (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
              hasTimestamp:(BOOL)hasTimestamp
           reuseIdentifier:(NSString *)reuseIdentifier;
 
+- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
+             hasTimestamp:(BOOL)hasTimestamp
+                   avatar:(NSURL *)avatar_url
+                 username:(NSString *)username
+          reuseIdentifier:(NSString *)reuseIdentifier;
+
+
 #pragma mark - Message Cell
 - (void)setMessage:(NSString *)msg;
 - (void)setTimestamp:(NSDate *)date;
+
 
 @end

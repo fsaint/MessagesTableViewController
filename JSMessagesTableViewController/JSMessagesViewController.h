@@ -64,6 +64,10 @@ typedef enum {
 @required
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath;
+@optional
+- (NSURL *)avatarURLFor:(NSIndexPath *)path;
+- (NSString *)usernameFor:(NSIndexPath *)path;
+
 @end
 
 

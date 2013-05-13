@@ -114,5 +114,8 @@
 {
     return [self.timestamps objectAtIndex:indexPath.row];
 }
+-(NSURL *)avatarURLFor:(NSIndexPath *)path{
+    return [NSURL URLWithString:@"http://www.google.com/"];
+}
 
 @end

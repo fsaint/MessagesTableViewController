@@ -33,13 +33,16 @@
 //  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#define AVATAR_SPACE 44.0
 #import "JSBubbleMessageCell.h"
 #import "UIColor+JSMessagesView.h"
-
+#import <QuartzCore/QuartzCore.h>
 @interface JSBubbleMessageCell()
 
 @property (strong, nonatomic) JSBubbleView *bubbleView;
 @property (strong, nonatomic) UILabel *timestampLabel;
+
+
 
 - (void)setup;
 - (void)configureTimestampLabel;
@@ -58,7 +61,6 @@
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.accessoryType = UITableViewCellAccessoryNone;
     self.accessoryView = nil;
-    
     self.imageView.image = nil;
     self.imageView.hidden = YES;
     self.textLabel.text = nil;
@@ -87,19 +89,8 @@
 
 - (void)configureWithStyle:(JSBubbleMessageStyle)style timestamp:(BOOL)hasTimestamp
 {
-    CGFloat bubbleY = 0.0f;
-    
-    if(hasTimestamp) {
-        [self configureTimestampLabel];
-        bubbleY = 14.0f;
-    }
-    
-    CGRect frame = CGRectMake(0.0f,
-                              bubbleY,
-                              self.contentView.frame.size.width,
-                              self.contentView.frame.size.height - self.timestampLabel.frame.size.height);
-    
-    self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
+      
+    self.bubbleView = [[JSBubbleView alloc] initWithFrame:CGRectZero
                                               bubbleStyle:style];
     
     self.bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -107,6 +98,79 @@
     [self.contentView addSubview:self.bubbleView];
     [self.contentView sendSubviewToBack:self.bubbleView];
 }
+
+
+-(void)layoutSubviews{
+    [super layoutSubviews];
+    
+    JSBubbleMessageStyle style = self.bubbleView.style;
+
+    CGFloat bubbleY = 0.0f;
+    
+    if(NO) {
+        [self configureTimestampLabel];
+        bubbleY = 14.0f;
+    }
+    
+    
+    
+    
+    CGRect full_frame = CGRectMake(0.0f,
+                                   bubbleY,
+                                   self.contentView.frame.size.width,
+                                   self.contentView.frame.size.height - self.timestampLabel.frame.size.height);
+    
+    
+    CGRect bubble_frame = full_frame;
+    if (self.show_avatars && (style == JSBubbleMessageStyleIncomingDefault || style == JSBubbleMessageStyleIncomingSquare)){
+        
+        
+        bubble_frame = CGRectMake(bubble_frame.origin.x +  AVATAR_SPACE, bubble_frame.origin.y, bubble_frame.size
+                                  .width-AVATAR_SPACE, bubble_frame.size.height);
+        
+       
+        
+        
+        self.avatar.hidden = NO;
+        
+        CGRect avatar_frame = full_frame;
+        
+        avatar_frame.size.width = AVATAR_SPACE;
+       
+        avatar_frame.origin.y = avatar_frame.size.height - AVATAR_SPACE;
+        avatar_frame.origin.x = avatar_frame.origin.x + 2.0;
+        avatar_frame.size.height = AVATAR_SPACE;
+        
+        
+        avatar_frame = CGRectInset(avatar_frame, 4.0, 4.0);
+        self.avatar.frame = avatar_frame;
+        
+    }else{
+        _avatar.hidden = YES;
+    }
+    
+    self.bubbleView.frame = bubble_frame;
+    
+    
+
+    
+}
+- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
+             hasTimestamp:(BOOL)hasTimestamp
+                   avatar:(NSURL *)avatar_url
+                 username:(NSString *)username
+          reuseIdentifier:(NSString *)reuseIdentifier{
+ 
+    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+    if(self) {
+        self.show_avatars = YES;
+        [self setup];
+        [self configureWithStyle:style timestamp:hasTimestamp];
+    }
+    return self;
+
+}
+
 
 - (id)initWithBubbleStyle:(JSBubbleMessageStyle)style hasTimestamp:(BOOL)hasTimestamp reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -139,4 +203,30 @@
                                                               timeStyle:NSDateFormatterShortStyle];
 }
 
+
+#pragma mark - Avatar 
+
+-(UIImageView *)avatar{
+    if (!_avatar){
+        _avatar = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _avatar.layer.cornerRadius = 2.0;
+        _avatar.layer.shadowColor = [UIColor blackColor].CGColor;
+        _avatar.layer.shadowOpacity = 0.4;
+        _avatar.layer.shadowOffset = CGSizeMake(0.5, 0.5);
+        _avatar.layer.shadowRadius = 1.0;
+        _avatar.backgroundColor = [UIColor whiteColor];
+    }
+    
+    [self.contentView addSubview:_avatar];
+    return _avatar;
+}
+
+-(void)setAvatar_url:(NSURL *)avatar_url{
+    _avatar_url =  avatar_url;
+    if (self.avatar_url)
+        self.show_avatars = YES;
+    else{
+        self.show_avatars = NO;
+    }
+}
 @end
