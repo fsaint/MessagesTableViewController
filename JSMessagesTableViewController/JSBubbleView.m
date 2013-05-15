@@ -118,7 +118,7 @@
                                         author_size.width,
                                         author_size.height );
         
-        [author_text drawInRect:author_rect withFont:[JSBubbleView authorFont] lineBreakMode:NSLineBreakByTruncatingMiddle alignment:NSTextAlignmentRight];
+        [author_text drawInRect:author_rect withFont:[JSBubbleView authorFont] lineBreakMode:NSLineBreakByTruncatingMiddle alignment:NSTextAlignmentLeft];
     }
     
 	CGSize textSize = [JSBubbleView textSizeForText:self.text];
