@@ -313,14 +313,25 @@
 }
 
 #pragma mark - Keyboard notifications
+
+-(BOOL)inPopover{
+	for (UIView *v = self.view; v.superview != nil; v=v.superview) { 
+		if ([v isKindOfClass:[NSClassFromString(@"_UIPopoverView") class]]) {
+			return YES;
+		}
+	}	
+	return NO;
+}
 - (void)handleWillShowKeyboard:(NSNotification *)notification
 {
-    [self keyboardWillShowHide:notification];
+	if (![self inPopover])
+    	[self keyboardWillShowHide:notification];
 }
 
 - (void)handleWillHideKeyboard:(NSNotification *)notification
 {
-    [self keyboardWillShowHide:notification];
+	if (![self inPopover])
+    	[self keyboardWillShowHide:notification];
 }
 
 - (void)keyboardWillShowHide:(NSNotification *)notification
