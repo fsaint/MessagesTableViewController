@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
   s.resources    = "JSMessagesTableViewController/Resources/**/*.*"
   s.frameworks   = 'AudioToolbox'
   s.requires_arc = true
-  s.dependency 'JGAFImageCache', :podspec => 'https://raw.github.com/jaminguy/JGAFImageCache/master/JGAFImageCache.podspec'
+  s.dependency 'JGAFImageCache'
 end
