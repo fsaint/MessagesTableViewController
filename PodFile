@@ -1,2 +1,2 @@
 platform :ios, :deployment_target => "6.0"
-pod 'JGAFImageCache', :podspec => 'https://raw.github.com/jaminguy/JGAFImageCache/master/JGAFImageCache.podspec'
+pod 'JGAFImageCache'
