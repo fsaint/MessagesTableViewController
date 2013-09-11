@@ -53,6 +53,8 @@
     self.title = @"Messages";
     
     self.messages = [[NSMutableArray alloc] initWithObjects:
+                     @"short",
+                     @"short",
                      @"Testing some messages here.",
                      @"This work is based on Sam Soffes' SSMessagesViewController.",
                      @"This is a complete re-write and refactoring.",

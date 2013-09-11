@@ -103,13 +103,14 @@
     
 	UIImage *image = [JSBubbleView bubbleImageForStyle:self.style];
     CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
-	CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
+    
+ 	CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
                                     kMarginTop,
-                                    bubbleSize.width,
+                                    MAX(bubbleSize.width,author_size.width +kBubblePaddingRight),
                                     bubbleSize.height + author_size.height);
     
 	[image drawInRect:bubbleFrame];
-	
+   
     
     CGFloat textX = (CGFloat)image.leftCapWidth - 3.0f + ([self styleIsOutgoing] ? bubbleFrame.origin.x : 0.0f);
     if (self.author){
@@ -119,7 +120,8 @@
                                         author_size.height );
         
         [author_text drawInRect:author_rect withFont:[JSBubbleView authorFont] lineBreakMode:NSLineBreakByTruncatingMiddle alignment:NSTextAlignmentLeft];
-    }
+        
+           }
     
 	CGSize textSize = [JSBubbleView textSizeForText:self.text];
 	
