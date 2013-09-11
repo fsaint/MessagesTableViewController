@@ -168,6 +168,20 @@
     return self;
 }
 
+- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
+             hasTimestamp:(BOOL)hasTimestamp
+                   avatar:(NSURL *)avatar_url
+                 username:(NSString *)username
+          reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [self initWithBubbleStyle:style hasTimestamp:hasTimestamp reuseIdentifier:reuseIdentifier];
+    if (self) {
+        _avatar_url = avatar_url;
+        _username = username;
+    }
+    return self;
+}
+
 #pragma mark - Setters
 - (void)setBackgroundColor:(UIColor *)color
 {
