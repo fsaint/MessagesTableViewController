@@ -204,8 +204,23 @@
 {
     CGFloat dateHeight = [self shouldHaveTimestampForRowAtIndexPath:indexPath] ? DATE_LABEL_HEIGHT : 0.0f;
     
-    CGFloat userHeight = [JSBubbleView textSizeForAuthor:@"One Line"].height;
-    return [JSBubbleView cellHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]] + dateHeight +userHeight;
+    CGFloat userHeight = 0.0;
+    
+    CGFloat avatar_space = 0.0;
+    
+    
+    
+    if ([self.dataSource respondsToSelector:@selector(avatarURLFor:)]){
+        NSURL *url = [self.dataSource avatarURLFor:indexPath];
+        JSBubbleMessageStyle style = [self.delegate messageStyleForRowAtIndexPath:indexPath];
+        
+        if (url && (style == JSBubbleMessageStyleIncomingDefault || style == JSBubbleMessageStyleIncomingSquare))
+            avatar_space = 44.0;
+    }
+    
+    if ([self.dataSource usernameFor:indexPath])
+        userHeight = [JSBubbleView textSizeForAuthor:@"One Line" viewWidth:self.view.bounds.size.width].height;
+    return [JSBubbleView cellHeightForText:[self.dataSource textForRowAtIndexPath:indexPath] viewWidth:self.view.bounds.size.width-avatar_space] + dateHeight +userHeight;
 }
 
 #pragma mark - Messages view controller

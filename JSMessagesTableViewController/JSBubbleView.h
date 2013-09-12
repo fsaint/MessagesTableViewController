@@ -58,11 +58,14 @@ typedef enum {
 + (UIImage *)bubbleImageForStyle:(JSBubbleMessageStyle)style;
 +(UIFont *)authorFont;
 + (UIFont *)font;
-+ (CGSize)textSizeForText:(NSString *)txt;
-+ (CGSize)textSizeForAuthor:(NSString *)txt;
-+ (CGSize)textSizeForText:(NSString *)txt font:(UIFont *)font;
-+ (CGSize)bubbleSizeForText:(NSString *)txt;
-+ (CGFloat)cellHeightForText:(NSString *)txt;
+- (CGSize)textSizeForText:(NSString *)txt;
+- (CGSize)textSizeForAuthor:(NSString *)txt;
++ (CGSize)textSizeForAuthor:(NSString *)txt viewWidth:(CGFloat)width;
+- (CGSize)textSizeForText:(NSString *)txt font:(UIFont *)font viewWidth:(CGFloat)width;
+- (CGSize)bubbleSizeForText:(NSString *)txt;
+- (CGFloat)cellHeightForText:(NSString *)txt;
++ (CGFloat)cellHeightForText:(NSString *)txt viewWidth:(CGFloat)width;
+
 + (int)maxCharactersPerLine;
 + (int)numberOfLinesForMessage:(NSString *)txt;
 

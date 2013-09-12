@@ -90,7 +90,6 @@
     _author = author;
     [self setNeedsDisplay];
 }
-
 #pragma mark - Drawing
 - (void)drawRect:(CGRect)frame
 {
@@ -98,11 +97,11 @@
     NSString *author_text =[NSString stringWithFormat:@"%@ said:",self.author];
     CGSize author_size = CGSizeZero;
     if (self.author){
-        author_size = [JSBubbleView textSizeForAuthor:author_text];
+        author_size = [self textSizeForAuthor:author_text];
     }
     
 	UIImage *image = [JSBubbleView bubbleImageForStyle:self.style];
-    CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
+    CGSize bubbleSize = [self bubbleSizeForText:self.text];
     
  	CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
                                     kMarginTop,
@@ -123,14 +122,16 @@
         
            }
     
-	CGSize textSize = [JSBubbleView textSizeForText:self.text];
+	CGSize textSize = [self textSizeForText:self.text];
 	
     CGRect textFrame = CGRectMake(textX,
                                   kPaddingTop + kMarginTop + author_size.height,
                                   textSize.width,
-                                  textSize.height + author_size.height);
+                                  textSize.height);
     
     
+   // UIBezierPath *p = [UIBezierPath bezierPathWithRect:textFrame];
+   // [p stroke];
     
 	[self.text drawInRect:textFrame
                  withFont:[JSBubbleView font]
@@ -177,34 +178,58 @@
     return [UIFont systemFontOfSize:16.0f];
 }
 
-+ (CGSize)textSizeForText:(NSString *)txt font:(UIFont *)font
+
+
++ (CGSize)textSizeForText:(NSString *)txt font:(UIFont *)font viewWidth:(CGFloat)width
 {
-    CGFloat width = [UIScreen mainScreen].applicationFrame.size.width * 0.65f;
-    CGFloat height = MAX([JSBubbleView numberOfLinesForMessage:txt],
-                         [txt numberOfLines]) * [JSMessageInputView textViewLineHeight];
-    
-    return [txt sizeWithFont:font
-           constrainedToSize:CGSizeMake(width, height)
-               lineBreakMode:NSLineBreakByWordWrapping];
+    width = width * 0.65f;
+    CGFloat height = 2000.0;
+    CGSize ret = [txt sizeWithFont:font
+                 constrainedToSize:CGSizeMake(width, height)
+                     lineBreakMode:NSLineBreakByWordWrapping];
+    return ret;
 }
-+ (CGSize)textSizeForText:(NSString *)txt{
-    return [JSBubbleView textSizeForText:txt font:[JSBubbleView font]];
++ (CGSize)textSizeForText:(NSString *)txt viewWidth:(CGFloat)width{
+    return [JSBubbleView textSizeForText:txt font:[JSBubbleView font] viewWidth:width];
+}
+- (CGSize)textSizeForText:(NSString *)txt{
+    return [JSBubbleView textSizeForText:txt font:[JSBubbleView font] viewWidth:self.bounds.size.width];
 }
 
-+ (CGSize)textSizeForAuthor:(NSString *)txt{
-    return [JSBubbleView textSizeForText:txt font:[JSBubbleView authorFont]];
++ (CGSize)textSizeForAuthor:(NSString *)txt viewWidth:(CGFloat)width{
+    return [self textSizeForText:txt font:[JSBubbleView authorFont] viewWidth:width];
 }
 
-+ (CGSize)bubbleSizeForText:(NSString *)txt
+
+- (CGSize)textSizeForAuthor:(NSString *)txt{
+    return [JSBubbleView textSizeForText:txt font:[JSBubbleView authorFont] viewWidth:self.bounds.size.width];
+}
+
+- (CGSize)bubbleSizeForText:(NSString *)txt
 {
-	CGSize textSize = [JSBubbleView textSizeForText:txt];
+	CGSize textSize = [self textSizeForText:txt];
 	return CGSizeMake(textSize.width + kBubblePaddingRight,
                       textSize.height + kPaddingTop + kPaddingBottom);
 }
 
-+ (CGFloat)cellHeightForText:(NSString *)txt
+
++ (CGSize)bubbleSizeForText:(NSString *)txt viewWidth:(CGFloat)width
 {
-    return [JSBubbleView bubbleSizeForText:txt].height + kMarginTop + kMarginBottom;
+	CGSize textSize = [JSBubbleView textSizeForText:txt viewWidth:width];
+    
+	return CGSizeMake(textSize.width + kBubblePaddingRight,
+                      textSize.height + kPaddingTop + kPaddingBottom);
+}
+
++ (CGFloat)cellHeightForText:(NSString *)txt viewWidth:(CGFloat)width
+{
+    return [JSBubbleView bubbleSizeForText:txt viewWidth:width].height + kMarginTop + kMarginBottom;
+}
+
+
+- (CGFloat)cellHeightForText:(NSString *)txt
+{
+    return [self bubbleSizeForText:txt].height + kMarginTop + kMarginBottom;
 }
 
 + (int)maxCharactersPerLine
