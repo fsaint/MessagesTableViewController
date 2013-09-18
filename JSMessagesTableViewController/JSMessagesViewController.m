@@ -289,17 +289,26 @@
     [textView resignFirstResponder];
 }
 
-- (void)textViewDidChange:(UITextView *)textView
-{
+- (void)textViewDidChange:(UITextView *)textView{
+
+    
+    
+
     CGFloat maxHeight = [JSMessageInputView maxHeight];
     CGFloat textViewContentHeight = textView.contentSize.height;
+    
     BOOL isShrinking = textViewContentHeight < self.previousTextViewContentHeight;
     CGFloat changeInHeight = textViewContentHeight - self.previousTextViewContentHeight;
     
+    
     changeInHeight = (textViewContentHeight + changeInHeight >= maxHeight) ? 0.0f : changeInHeight;
+    
     
     if(!isShrinking)
         [self.inputView adjustTextViewHeightBy:changeInHeight];
+    
+//    return;
+
     
     if(changeInHeight != 0.0f) {
         [UIView animateWithDuration:0.25f

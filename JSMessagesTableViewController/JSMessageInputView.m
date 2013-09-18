@@ -79,7 +79,7 @@
     CGFloat width = self.frame.size.width - SEND_BUTTON_WIDTH;
     CGFloat height = [JSMessageInputView textViewLineHeight];
     
-    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(6.0f, 3.0f, width, height)];
+    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(6.0f, 3.0f, width, 400.0)];
     self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.textView.backgroundColor = [UIColor whiteColor];
     self.textView.scrollIndicatorInsets = UIEdgeInsetsMake(10.0f, 0.0f, 10.0f, 8.0f);
@@ -118,7 +118,7 @@
 #pragma mark - Message input view
 - (void)adjustTextViewHeightBy:(CGFloat)changeInHeight
 {
-    CGRect prevFrame = self.textView.frame;
+   CGRect prevFrame = self.textView.frame;
     
     int numLines = MAX([JSBubbleView numberOfLinesForMessage:self.textView.text],
                        [self.textView.text numberOfLines]);
@@ -131,14 +131,14 @@
     self.textView.contentInset = UIEdgeInsetsMake((numLines >= 6 ? 4.0f : 0.0f),
                                                   0.0f,
                                                   (numLines >= 6 ? 4.0f : 0.0f),
-                                                  0.0f);
+                                                 0.0f);
     
-    self.textView.scrollEnabled = (numLines >= 4);
+   // self.textView.scrollEnabled = (numLines >= 4);
 }
 
 + (CGFloat)textViewLineHeight
 {
-    return 30.0f; // for fontSize 15.0f
+    return 36.0f; // for fontSize 15.0f
 }
 
 + (CGFloat)maxLines
